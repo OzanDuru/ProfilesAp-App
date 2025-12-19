@@ -115,12 +115,11 @@ ifconfig | grep "inet "
 
 ## ✍️ Author
 
-YOUR NAME HERE — YOUR STUDENT ID
+Ozan DURU
 
 ```
 
 ---
 
-Bunu **tek seferde kopyala → README.md’ye yapıştır → kaydet** ✅  
-İstersen adını ve numaranı yaz, ben senin adına doldurup tekrar vereyim.
+
 ```
