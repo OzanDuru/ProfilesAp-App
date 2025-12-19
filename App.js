@@ -1,20 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+// React Navigation'dan gerekli bileşenleri import ediyoruz
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+// Kendi oluşturduğumuz ekran (screen) bileşenlerini import ediyoruz
+import ProfilesListScreen from './screens/ProfilesListScreen';
+import ProfileDetailScreen from './screens/ProfileDetailScreen';
+
+// Stack navigator oluşturuyoruz
+// Bu, ekranlar arasında "ileri-geri" geçiş yapmamızı sağlar
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    // NavigationContainer: Navigasyon sisteminin en dış sarmalayıcısıdır
+    // Uygulamada sadece BİR tane olur
+    <NavigationContainer>
+      
+      {/* Stack.Navigator: Bu uygulamadaki stack yapısını tanımlar */}
+      <Stack.Navigator>
+        
+        {/* İlk ekran: Profil listesini gösterir */}
+        <Stack.Screen
+          name="Profiles"                 // Ekranın navigasyondaki adı
+          component={ProfilesListScreen} // Gösterilecek React component
+        />
+
+        {/* İkinci ekran: Seçilen profilin detayını gösterir */}
+        <Stack.Screen
+          name="ProfileDetail"
+          component={ProfileDetailScreen}
+        />
+
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
