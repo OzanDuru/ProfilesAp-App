@@ -6,6 +6,7 @@ import {
   Pressable,
   StyleSheet,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 
 // Axios instance'ımız (baseURL ayarlı)
@@ -26,6 +27,25 @@ export default function ProfilesListScreen({ navigation }) {
 
   // Daha fazla veri var mı? (API boş dönerse false yapacağız)
   const [hasMore, setHasMore] = useState(true);
+
+  // Pull-to-refresh için state
+    const [refreshing, setRefreshing] = useState(false);
+
+    // Yukarı çekince çalışacak fonksiyon
+    const onRefresh = async () => {
+    setRefreshing(true);
+
+    // Listeyi ve sayfayı sıfırla
+    setProfiles([]);
+    setPage(1);
+    setHasMore(true);
+
+    // İlk sayfayı tekrar çek
+    await fetchProfiles();
+
+    setRefreshing(false);
+    };
+
 
   /**
    * API'den profilleri sayfa sayfa çeker.
@@ -105,6 +125,28 @@ export default function ProfilesListScreen({ navigation }) {
     );
   };
 
+  // Liste boşsa gösterilecek bileşen
+    const renderEmpty = () => {
+        if (loading) return null;
+    
+        return (
+        <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>No profiles found</Text>
+        </View>
+        );
+    };
+
+    if (loading && profiles.length === 0) {
+        return (
+          <View style={styles.centerContainer}>
+            <ActivityIndicator size="large" />
+            <Text style={styles.loadingText}>Loading profiles...</Text>
+          </View>
+        );
+      }
+      
+  
+
   /**
    * Eğer hata var ve hiç veri yoksa (ilk yükleme başarısız)
    * kullanıcıya retry ekranı göster.
@@ -138,6 +180,11 @@ export default function ProfilesListScreen({ navigation }) {
 
         // En altta loading göstergesi
         ListFooterComponent={renderFooter}
+        ListEmptyComponent={renderEmpty}
+        refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          
       />
     </View>
   );
@@ -206,5 +253,19 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#666',
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: '#666',
   },
 });
